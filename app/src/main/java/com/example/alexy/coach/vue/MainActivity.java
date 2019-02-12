@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.alexy.coach.R;
 import com.example.alexy.coach.controleur.Controle;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
 
     // propriétés
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.init();
-        controle = Controle.getInstance();
+        controle = Controle.getInstance(this);
     }
 
     /**
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void afficheResult(Integer poids, Integer taille, Integer age, Integer sexe) {
         // Création du profil et récupération des informations
-       this.controle.creerProfil(poids, taille, age, sexe);
+       this.controle.creerProfil(poids, taille, age, sexe, this);
        float img = this.controle.getImg();
        String message = this.controle.getMessage();
 
@@ -111,5 +113,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         lblIMG.setText(String.format("%.01f", img) +" IMG "+ message);
+    }
+
+    private void recupProfil() {
+        if(this.controle.getAge() != 0) {
+            this.txtAge = (TextView) this.controle.getAge();
+        }
     }
 }

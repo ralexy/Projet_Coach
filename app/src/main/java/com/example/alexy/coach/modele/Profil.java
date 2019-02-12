@@ -1,10 +1,12 @@
 package com.example.alexy.coach.modele;
 
+import java.io.Serializable;
+
 /**
  * Created by Alexy ROUSSEAU on 10/01/2019
  */
 
-public class Profil {
+public class Profil implements Serializable {
     private static final Integer minFemme = 15; // maigre si en-dessous
     private static final Integer maxFemme = 30; // gros si au-dessus
     private static final Integer minHomme = 10; // maigre si en-dessous

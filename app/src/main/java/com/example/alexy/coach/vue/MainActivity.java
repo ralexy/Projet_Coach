@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtTaille;
     private TextView txtAge;
     private RadioButton rdHomme;
+    private RadioButton rdFemme;
     private TextView lblIMG;
     private ImageView imgPoids;
 
@@ -34,21 +35,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.init();
-        controle = Controle.getInstance(this);
+        init();
     }
 
     /**
      * initialisation des liens avec les objets graphiques
      */
-    private void init() {
-        txtPoids = (EditText) findViewById(R.id.txtPoids) ;
-        txtTaille = (EditText) findViewById(R.id.txtTaille) ;
-        txtAge = (EditText) findViewById(R.id.txtAge) ;
-        rdHomme = (RadioButton) findViewById(R.id.rdHomme) ;
-        lblIMG = (TextView) findViewById(R.id.lblIMG) ;
-        imgPoids = (ImageView) findViewById(R.id.imgPoids) ;
+    private void init(){
+        txtPoids = (EditText) findViewById(R.id.txtPoids);
+        txtTaille = (EditText) findViewById(R.id.txtTaille);
+        txtAge = (EditText) findViewById(R.id.txtAge);
+        rdHomme = (RadioButton) findViewById(R.id.rdHomme);
+        rdFemme = (RadioButton) findViewById(R.id.rdFemme);
+        lblIMG = (TextView) findViewById(R.id.lblIMG);
+        imgPoids = (ImageView) findViewById(R.id.imgPoids);
+        controle = Controle.getInstance(this);
         ecouteCalcul();
+        recupProfil();
     }
 
     /**
@@ -115,9 +118,22 @@ public class MainActivity extends AppCompatActivity {
         lblIMG.setText(String.format("%.01f", img) +" IMG "+ message);
     }
 
-    private void recupProfil() {
-        if(this.controle.getAge() != 0) {
-            this.txtAge = (TextView) this.controle.getAge();
+    /**
+     * Récupère le profil sérialisé et affiche les informations
+     */
+        private void recupProfil(){
+            if(controle.getTaille()!=null){
+                // affichage des informations récupérées
+                txtPoids.setText(controle.getPoids().toString());
+                txtTaille.setText(controle.getTaille().toString());
+                txtAge.setText(controle.getAge().toString());
+                if(controle.getSexe()==0){
+                    rdFemme.setChecked(true);
+                }else{
+                    rdHomme.setChecked(true);
+                }
+                // simulation du clic sur le bouton calcul
+                ((Button)findViewById(R.id.btnCalculer)).performClick();
+            }
         }
-    }
 }

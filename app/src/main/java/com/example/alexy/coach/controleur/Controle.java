@@ -37,8 +37,8 @@ public final class Controle {
      * @param sexe 1 pour homme, 0 pour femme
      */
     public void creerProfil(int poids, int taille, int age, int sexe, Context contexte) {
-        this.profil = new Profil(poids, taille, age, sexe);
-        Serializer.serialize(this.nomFic, this.profil, contexte);
+        profil = new Profil(poids, taille, age, sexe);
+        Serializer.serialize(nomFic, profil, contexte);
 
     }
 
@@ -47,63 +47,63 @@ public final class Controle {
      * @return
      */
     public float getImg() {
-        return this.profil.getImg();
+        return profil.getImg();
     }
 
     /**
      * Retourne la méthode getMessage() de l'instance de Profil
-     * @return
+     * @return String le message
      */
     public String getMessage() {
-        return this.profil.getMessage();
+        if(profil == null) {
+            return null;
+        } else {
+            return profil.getMessage();
+        }
     }
 
     /**
      * Méthode permettant de retourner la taille d'une personne,
-     * Retourne 0 si aucune information n'a été stockée
      */
-    public int getTaille() {
-        if(!this.profil.getTaille().equals(null)) {
-           return this.profil.getTaille();
+    public Integer getTaille() {
+        if(profil == null) {
+            return null;
+        } else {
+            return profil.getTaille();
         }
-
-        return 0;
     }
 
     /**
      * Méthode permettant de retourner le poids d'une personne,
-     * Retourne 0 si aucune information n'a été stockée
      */
-    public int getPoids() {
-        if(!this.profil.getPoids().equals(null)) {
-            return this.profil.getPoids();
+    public Integer getPoids() {
+        if(profil == null) {
+            return null;
+        } else {
+            return profil.getPoids();
         }
-
-        return 0;
     }
 
     /**
      * Méthode permettant de retourner l'âge d'une personne,
-     * Retourne 0 si aucune information n'a été stockée
      */
-    public int getAge() {
-        if(!this.profil.getAge().equals(null)) {
-            return this.profil.getAge();
+    public Integer getAge() {
+        if(profil == null) {
+            return null;
+        } else{
+            return profil.getAge();
         }
-
-        return 0;
     }
 
     /**
      * Méthode permettant de retourner le sexe d'une personne,
-     * Retourne 0 si aucune information n'a été stockée
      */
-    public int getSexe() {
-        if(!this.profil.getSexe().equals(null)) {
-            return this.profil.getSexe();
+    public Integer getSexe() {
+        if(profil == null) {
+            return null;
+        } else {
+            return profil.getTaille();
         }
-
-        return 0;
     }
 
     /**

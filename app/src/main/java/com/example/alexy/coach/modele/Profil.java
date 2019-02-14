@@ -40,9 +40,7 @@ public class Profil implements Serializable {
      * Retourne le poids du profil
      * @return
      */
-    public Integer getPoids() {
-        return poids;
-    }
+    public Integer getPoids() { return poids; }
 
     /**
      * Retourne la taille du profil
@@ -112,7 +110,7 @@ public class Profil implements Serializable {
                 this.message = "trop élevé";
             }
             else{
-                this.message = "poids normal";
+                this.message = "normal";
             }
         }
     }

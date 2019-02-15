@@ -1,6 +1,7 @@
 package com.example.alexy.coach.modele;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Alexy ROUSSEAU on 10/01/2019
@@ -18,6 +19,7 @@ public class Profil implements Serializable {
     private Integer sexe;
     private float img;
     private String message;
+    private Date dateMesure;
 
     /**
      * Constructeur
@@ -26,7 +28,8 @@ public class Profil implements Serializable {
      * @param age
      * @param sexe 0 pour femme 1 pour homme
      */
-    public Profil(Integer poids, Integer taille, Integer age, Integer sexe) {
+    public Profil(Date dateMesure, Integer poids, Integer taille, Integer age, Integer sexe) {
+        this.dateMesure = dateMesure;
         this.poids = poids;
         this.taille = taille;
         this.age = age;
@@ -77,6 +80,12 @@ public class Profil implements Serializable {
     public String getMessage() {
         return message;
     }
+
+    /**
+     * Retourne la date de création de l'objet
+     * @return Date la date
+     */
+    public Date getDateMesure() { return dateMesure; }
 
     /**
      * Calcule l'IMG du profil

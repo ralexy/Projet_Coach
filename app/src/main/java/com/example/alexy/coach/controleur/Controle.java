@@ -2,13 +2,17 @@ package com.example.alexy.coach.controleur;
 
 import android.content.Context;
 
+import com.example.alexy.coach.modele.AccessLocal;
 import com.example.alexy.coach.modele.Profil;
 import com.example.alexy.coach.outils.Serializer;
+
+import java.util.Date;
 
 public final class Controle {
     private static Controle instance = null;
     private static Profil profil = null;
     private static String nomFic = "saveprofil";
+    private static AccessLocal accesLocal;
 
     /**
      * Contructeur privé pour ne pas l'instancier (Pattern Singleton)
@@ -24,7 +28,9 @@ public final class Controle {
     public static final Controle getInstance(Context contexte) {
         if(Controle.instance == null) {
             Controle.instance = new Controle();
-            Controle.recupSerialize(contexte);
+            Controle.accesLocal = new AccessLocal(contexte);
+            profil = accesLocal.recupDernier();
+            //Controle.recupSerialize(contexte);
         }
         return Controle.instance;
     }
@@ -37,9 +43,13 @@ public final class Controle {
      * @param sexe 1 pour homme, 0 pour femme
      */
     public void creerProfil(int poids, int taille, int age, int sexe, Context contexte) {
-        profil = new Profil(poids, taille, age, sexe);
-        Serializer.serialize(nomFic, profil, contexte);
+        profil = new Profil(new Date(), poids, taille, age, sexe);
 
+        // Sauvegarde de notre profil par sérialisation
+        //Serializer.serialize(nomFic, profil, contexte);
+
+        // Ajout de notre profil dans la DB SQLite
+        accesLocal.ajout(profil);
     }
 
     /**

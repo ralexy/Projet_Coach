@@ -1,7 +1,11 @@
 package com.example.alexy.coach.modele;
 
+import org.json.JSONArray;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Alexy ROUSSEAU on 10/01/2019
@@ -122,5 +126,16 @@ public class Profil implements Serializable {
                 this.message = "normal";
             }
         }
+    }
+
+    public JSONArray convertToJSONArray() {
+        List list = new ArrayList();
+        list.add(0, dateMesure);
+        list.add(1, poids);
+        list.add(2, taille);
+        list.add(3, age);
+        list.add(4, sexe);
+
+        return new JSONArray(list);
     }
 }

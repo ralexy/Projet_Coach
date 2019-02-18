@@ -54,7 +54,7 @@ public class AccessLocal {
 
             profil = new Profil(dateMesure, curseur.getInt(1), curseur.getInt(2), curseur.getInt(3), curseur.getInt(4));
 
-            Log.d("DATE ****", "" + dateMesure);
+            //Log.d("DATE ****", "" + dateMesure);
 
         }
         // Fermeture du curseur

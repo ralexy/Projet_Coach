@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         imgPoids = (ImageView) findViewById(R.id.imgPoids);
         controle = Controle.getInstance(this);
         ecouteCalcul();
-        recupProfil();
+        //recupProfil();
     }
 
     /**
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Récupère le profil sérialisé et affiche les informations
      */
-        private void recupProfil(){
+        public void recupProfil(){
             if(controle.getTaille()!=null){
                 // affichage des informations récupérées
                 txtPoids.setText(controle.getPoids().toString());

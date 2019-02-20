@@ -1,5 +1,7 @@
 package com.example.alexy.coach.modele;
 
+import com.example.alexy.coach.outils.MesOutils;
+
 import org.json.JSONArray;
 
 import java.io.Serializable;
@@ -130,7 +132,7 @@ public class Profil implements Serializable {
 
     public JSONArray convertToJSONArray() {
         List list = new ArrayList();
-        list.add(0, dateMesure);
+        list.add(0, MesOutils.convertDateToString(dateMesure));
         list.add(1, poids);
         list.add(2, taille);
         list.add(3, age);

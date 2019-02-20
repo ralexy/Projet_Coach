@@ -14,8 +14,17 @@ public abstract class MesOutils {
      * @return
      */
     public static Date convertStringToDate(String uneDate) {
-        String expectedPattern = "EEE MMM dd hh:mm:ss 'CET' yyyy";
-        SimpleDateFormat formatter = new SimpleDateFormat(expectedPattern, Locale.US);
+        return convertStringToDate(uneDate, "EEE MMM dd hh:mm:ss 'CET' yyyy");
+    }
+
+    /**
+     * Conversion chaîne sous le format reçu en paramètre et vers une date
+     * @param uneDate
+     * @param formatAttendu
+     * @return
+     */
+    public static Date convertStringToDate(String uneDate, String formatAttendu) {
+        SimpleDateFormat formatter = new SimpleDateFormat(formatAttendu);
         try {
             Date date = formatter.parse(uneDate);
             return date;
@@ -25,6 +34,12 @@ public abstract class MesOutils {
         return null;
     }
 
+
+    /**
+     * Conversion d'une date en chaîne sous le format yyyy-MM-dd HH:mm:ss
+     * @param uneDate
+     * @return
+     */
     public static String convertDateToString(Date uneDate) {
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return date.format(uneDate);

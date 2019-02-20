@@ -6,6 +6,7 @@ import com.example.alexy.coach.modele.AccesDistant;
 import com.example.alexy.coach.modele.AccessLocal;
 import com.example.alexy.coach.modele.Profil;
 import com.example.alexy.coach.outils.Serializer;
+import com.example.alexy.coach.vue.MainActivity;
 
 import org.json.JSONArray;
 
@@ -17,6 +18,7 @@ public final class Controle {
     private static String nomFic = "saveprofil";
     private static AccessLocal accesLocal;
     private static AccesDistant accesDistant = new AccesDistant();
+    private static Context contexte;
 
     /**
      * Contructeur privé pour ne pas l'instancier (Pattern Singleton)
@@ -30,12 +32,17 @@ public final class Controle {
      * @return
      */
     public static final Controle getInstance(Context contexte) {
+        if(contexte != null) {
+            Controle.contexte = contexte;
+        }
         if(Controle.instance == null) {
             Controle.instance = new Controle();
             Controle.accesLocal = new AccessLocal(contexte);
+            Controle.contexte = contexte;
             //profil = accesLocal.recupDernier();
             //Controle.recupSerialize(contexte);
 
+            accesDistant = new AccesDistant();
             accesDistant.envoi("dernier", new JSONArray());
 
         }
@@ -130,5 +137,14 @@ public final class Controle {
      */
     private static void recupSerialize(Context contexte) {
         Controle.profil = (Profil) Serializer.deSerialize(nomFic, contexte);
+    }
+
+    /**
+     * Setter profil
+     * @param profil le Profil à définir
+     */
+    public void setProfil(Profil profil) {
+        Controle.profil = profil;
+        ((MainActivity)contexte).recupProfil();
     }
 }

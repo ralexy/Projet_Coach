@@ -6,7 +6,7 @@ import com.example.alexy.coach.modele.AccesDistant;
 import com.example.alexy.coach.modele.AccessLocal;
 import com.example.alexy.coach.modele.Profil;
 import com.example.alexy.coach.outils.Serializer;
-import com.example.alexy.coach.vue.MainActivity;
+import com.example.alexy.coach.vue.CalculActivity;
 
 import org.json.JSONArray;
 
@@ -145,6 +145,6 @@ public final class Controle {
      */
     public void setProfil(Profil profil) {
         Controle.profil = profil;
-        ((MainActivity)contexte).recupProfil();
+        ((CalculActivity)contexte).recupProfil();
     }
 }

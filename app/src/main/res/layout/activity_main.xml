@@ -9,7 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="121dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,20 +25,24 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/btnMonImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_normal" />
-
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="91dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Mon IMG" />
+
+                <ImageButton
+                    android:id="@+id/btnMonImg"
+                    android:layout_width="242dp"
+                    android:layout_height="283dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_normal" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -52,13 +58,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/btnMonHistorique"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_history" />
-
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
@@ -66,6 +65,17 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Mon Historique" />
+
+                <ImageButton
+                    android:id="@+id/btnMonHistorique"
+                    android:layout_width="248dp"
+                    android:layout_height="205dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_history" />
+
             </LinearLayout>
 
         </LinearLayout>

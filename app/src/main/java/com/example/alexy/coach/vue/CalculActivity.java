@@ -1,5 +1,6 @@
 package com.example.alexy.coach.vue;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class CalculActivity extends AppCompatActivity {
         imgPoids = (ImageView) findViewById(R.id.imgPoids);
         controle = Controle.getInstance(this);
         ecouteCalcul();
+        ecouteRetourMenu();
         //recupProfil();
     }
 
@@ -116,20 +118,32 @@ public class CalculActivity extends AppCompatActivity {
 
     /**
      * Récupère le profil sérialisé et affiche les informations
-     */
-        public void recupProfil(){
-            if(controle.getTaille()!=null){
-                // affichage des informations récupérées
-                txtPoids.setText(controle.getPoids().toString());
-                txtTaille.setText(controle.getTaille().toString());
-                txtAge.setText(controle.getAge().toString());
-                if(controle.getSexe()==0){
-                    rdFemme.setChecked(true);
-                }else{
-                    rdHomme.setChecked(true);
-                }
-                // simulation du clic sur le bouton calcul
-                ((Button)findViewById(R.id.btnCalculer)).performClick();
+    */
+    public void recupProfil(){
+        if(controle.getTaille()!=null){
+            // affichage des informations récupérées
+            txtPoids.setText(controle.getPoids().toString());
+            txtTaille.setText(controle.getTaille().toString());
+            txtAge.setText(controle.getAge().toString());
+            if(controle.getSexe()==0){
+                rdFemme.setChecked(true);
+            }else{
+                rdHomme.setChecked(true);
             }
+            // simulation du clic sur le bouton calcul
+            ((Button)findViewById(R.id.btnCalculer)).performClick();
         }
+    }
+
+    /**
+     * Ouvrir l'activity correspondante
+     */
+    public void ecouteRetourMenu() {
+        ((Button) findViewById(R.id.btnAccueil)).setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(CalculActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 }

@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void creerMenu() {
         ecouteMenu((ImageButton) findViewById(R.id.btnMonImg), CalculActivity.class);
-        //ecouteMenu((ImageButton) findViewById(R.id.btnMonHistorique), CalculActivity.class);
+        ecouteMenu((ImageButton) findViewById(R.id.btnMonHistorique), HistoActivity.class);
     }
 
     /**

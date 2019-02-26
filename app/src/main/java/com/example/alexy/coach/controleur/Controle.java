@@ -10,11 +10,13 @@ import com.example.alexy.coach.vue.CalculActivity;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public final class Controle {
     private static Controle instance = null;
     private static Profil profil = null;
+    private static ArrayList<Profil> lesProfils;
     private static String nomFic = "saveprofil";
     private static AccessLocal accesLocal;
     private static AccesDistant accesDistant = new AccesDistant();
@@ -43,10 +45,18 @@ public final class Controle {
             //Controle.recupSerialize(contexte);
 
             accesDistant = new AccesDistant();
-            accesDistant.envoi("dernier", new JSONArray());
+            accesDistant.envoi("tous", new JSONArray());
 
         }
         return Controle.instance;
+    }
+
+    public static ArrayList<Profil> getLesProfils() {
+        return lesProfils;
+    }
+
+    public void setLesProfils(ArrayList<Profil> lesProfils) {
+        this.lesProfils = lesProfils;
     }
 
     /**
@@ -58,13 +68,14 @@ public final class Controle {
      */
     public void creerProfil(int poids, int taille, int age, int sexe, Context contexte) {
         profil = new Profil(new Date(), poids, taille, age, sexe);
+        lesProfils.add(profil);
 
         // Sauvegarde de notre profil par sérialisation
         //Serializer.serialize(nomFic, profil, contexte);
 
         // Ajout de notre profil dans la DB SQLite
         //accesLocal.ajout(profil);
-        accesDistant.envoi("enreg", profil.convertToJSONArray());
+        accesDistant.envoi("enreg", lesProfils.get(lesProfils.size() - 1).convertToJSONArray());
     }
 
     /**
@@ -72,7 +83,7 @@ public final class Controle {
      * @return
      */
     public float getImg() {
-        return profil.getImg();
+        return lesProfils.get(lesProfils.size() - 1).getImg();
     }
 
     /**
@@ -83,7 +94,7 @@ public final class Controle {
         if(profil == null) {
             return null;
         } else {
-            return profil.getMessage();
+            return lesProfils.get(lesProfils.size() - 1).getMessage();
         }
     }
 
@@ -94,7 +105,7 @@ public final class Controle {
         if(profil == null) {
             return null;
         } else {
-            return profil.getTaille();
+            return lesProfils.get(lesProfils.size() - 1).getTaille();
         }
     }
 
@@ -105,7 +116,7 @@ public final class Controle {
         if(profil == null) {
             return null;
         } else {
-            return profil.getPoids();
+            return lesProfils.get(lesProfils.size() - 1).getPoids();
         }
     }
 
@@ -116,7 +127,7 @@ public final class Controle {
         if(profil == null) {
             return null;
         } else{
-            return profil.getAge();
+            return lesProfils.get(lesProfils.size() - 1).getAge();
         }
     }
 
@@ -127,7 +138,7 @@ public final class Controle {
         if(profil == null) {
             return null;
         } else {
-            return profil.getTaille();
+            return lesProfils.get(lesProfils.size() - 1).getSexe();
         }
     }
 

@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class AccesDistant implements AsyncResponse {
@@ -32,19 +34,23 @@ public class AccesDistant implements AsyncResponse {
                 case "enreg":
                     break;
 
-                case "dernier":
+                case "tous":
                     try {
-                        JSONObject info = new JSONObject(message[1]);
+                        JSONArray info = new JSONArray(message[1]);
+                        ArrayList <Profil> lesProfils = controle.getLesProfils();
 
-                        Integer poids = info.getInt("poids");
-                        Integer taille = info.getInt("taille");
-                        Integer age = info.getInt("age");
-                        Integer sexe = info.getInt("sexe");
-                        Date datemesure = MesOutils.convertStringToDate(info.getString("datemesure"), "yyyy-MM-dd HH:mm:ss");
+                        for(int i = 0; i < info.length(); i++) {
+                            Integer poids = info.getJSONObject(i).getInt("poids");
+                            Integer taille = info.getJSONObject(i).getInt("taille");
+                            Integer age = info.getJSONObject(i).getInt("age");
+                            Integer sexe = info.getJSONObject(i).getInt("sexe");
+                            Date datemesure = MesOutils.convertStringToDate(info.getJSONObject(i).getString("datemesure"), "yyyy-MM-dd HH:mm:ss");
 
-                        Profil profil = new Profil(datemesure, poids, taille, age, sexe);
+                            lesProfils.add(new Profil(datemesure, poids, taille, age, sexe));
+                        }
 
-                        controle.setProfil(profil);
+                        controle.setLesProfils(lesProfils);
+
                     } catch (JSONException e) {
                         Log.d("erreur", "conversion JSON impossible " + e.toString());
                     }

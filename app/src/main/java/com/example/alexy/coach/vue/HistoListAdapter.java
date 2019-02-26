@@ -1,11 +1,32 @@
 package com.example.alexy.coach.vue;
 
+import android.content.Context;
 import android.database.DataSetObserver;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
-public class HistoListAdapter extends ListAdapter {
+import com.example.alexy.coach.R;
+import com.example.alexy.coach.modele.Profil;
+import com.example.alexy.coach.outils.MesOutils;
+
+import java.util.ArrayList;
+
+public class HistoListAdapter extends BaseAdapter {
+
+    ArrayList <Profil> lesProfils;
+    LayoutInflater inflater;
+    Context context;
+
+    public HistoListAdapter(Context context, ArrayList <Profil> profils) {
+        this.lesProfils = profils;
+        this.inflater = LayoutInflater.from(context);
+        this.context = context;
+    }
+
     @Override
     public boolean areAllItemsEnabled() {
         return false;
@@ -28,7 +49,7 @@ public class HistoListAdapter extends ListAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return lesProfils.size();
     }
 
     @Override
@@ -38,7 +59,7 @@ public class HistoListAdapter extends ListAdapter {
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
@@ -48,7 +69,38 @@ public class HistoListAdapter extends ListAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        // holder est un objet de la petite classe
+        ViewHolder holder ;
+        // si la ligne active reçue en paramètre n'existe pas encore
+        if (view == null) {
+            holder = new ViewHolder() ;
+            // la ligne est construite à partir de la structure de la ligne (récupérée dans layout_list_histo)
+            view = inflater.inflate(R.layout.layout_liste_histo, null) ;
+            // chaque propriété de holder (correspondant aux objets graphiques) est liée à un des objets graphiques
+            holder.txtListDate = (TextView)view.findViewById(R.id.txtListDate) ;
+            holder.txtListIMG = (TextView)view.findViewById(R.id.txtListIMG) ;
+            holder.imgListSuppr = (ImageButton)view.findViewById(R.id.imgListSuppr) ;
+            // affecte le holder comme tag (étiquette) de la ligne
+            view.setTag(holder) ;
+        }else{
+            // si la ligne existe déjà, holder récupère le holder de la ligne (précédemment mémorisé)
+            holder = (ViewHolder)view.getTag();
+        }
+        // holder est maintenant lié à la ligne graphique
+        // valorisation des propriétés de holder avec le profil de lesProfils (à un indice précis : position)
+        holder.txtListDate.setText(MesOutils.convertDateToString(lesProfils.get(i).getDateMesure())) ;
+        holder.txtListIMG.setText(MesOutils.format2Decimal(lesProfils.get(i).getImg())) ;
+        // mémorisation de l'indice de ligne en étiquette de imgListSuppr pour ensuite récupérer cet indice dans l'événement
+        holder.imgListSuppr.setTag(i) ;
+        // gestion de l'événement clic sur le bouton de suppression
+        holder.imgListSuppr.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // code a exécuter sur le clic d'un bouton suppr
+            }
+        }) ;
+        // retour de la vue construite
+        return view ;
     }
 
     @Override
@@ -64,5 +116,11 @@ public class HistoListAdapter extends ListAdapter {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    private class ViewHolder {
+        TextView txtListDate;
+        TextView txtListIMG;
+        ImageButton imgListSuppr;
     }
 }

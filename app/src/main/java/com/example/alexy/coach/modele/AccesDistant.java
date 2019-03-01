@@ -11,70 +11,90 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class AccesDistant implements AsyncResponse {
-    private static final String SERVERADDR = "http://192.168.1.6/coach/serveurcoach.php";
-    private static Controle controle;
+/**
+ * Created by emds on 25/02/2018.
+ */
 
-    public AccesDistant() {
-        AccesDistant.controle = controle.getInstance(null);
+public class AccesDistant implements AsyncResponse {
+
+    // constante
+    private static final String SERVERADDR = "http://192.168.1.6/coach/serveurcoach.php";
+
+    // propriétés
+    private Controle controle;
+
+    /**
+     * Constructeur
+     */
+    public AccesDistant(){
+        controle = Controle.getInstance(null);
     }
 
+    /**
+     * Retour du serveur HTTP
+     * @param output
+     */
     @Override
     public void processFinish(String output) {
-        Log.d("serveur", "******************" + output);
-
+        // pour vérification, affiche le contenu du retour dans la console
+        Log.d("serveur", "************" + output);
+        // découpage du message reçu
         String[] message = output.split("%");
-
-        if(message.length >= 1) {
-            switch (message[0]) {
-                case "enreg":
-                    break;
-
-                case "tous":
+        // contrôle si le retour est correct (au moins 2 cases)
+        if(message.length>1){
+            if(message[0].equals("enreg")){
+                Log.d("enreg","****************"+message[1]);
+            }else{
+                if(message[0].equals("tous")){
+                    // Log.d("dernier","****************"+message[1]);
                     try {
-                        JSONArray info = new JSONArray(message[1]);
-                        ArrayList <Profil> lesProfils = controle.getLesProfils();
-
-                        for(int i = 0; i < info.length(); i++) {
-                            Integer poids = info.getJSONObject(i).getInt("poids");
-                            Integer taille = info.getJSONObject(i).getInt("taille");
-                            Integer age = info.getJSONObject(i).getInt("age");
-                            Integer sexe = info.getJSONObject(i).getInt("sexe");
-                            Date datemesure = MesOutils.convertStringToDate(info.getJSONObject(i).getString("datemesure"), "yyyy-MM-dd HH:mm:ss");
-
-                            lesProfils.add(new Profil(datemesure, poids, taille, age, sexe));
+                        ArrayList<Profil> lesProfils = new ArrayList<Profil>();
+                        // récupération des informations
+                        JSONArray lesInfos = new JSONArray(message[1]);
+                        for(int k=0;k<lesInfos.length();k++){
+                            JSONObject info = new JSONObject(lesInfos.get(k).toString());
+                            Integer poids = info.getInt("poids");
+                            Integer taille = info.getInt("taille");
+                            Integer age = info.getInt("age");
+                            Integer sexe = info.getInt("sexe");
+                            Date dateMesure = MesOutils.convertStringToDate(info.getString("datemesure"),"yyyy-MM-dd hh:mm:ss");
+                            // création du profil
+                            Profil profil = new Profil(dateMesure, poids, taille, age, sexe);
+                            // ajout du profil dans la liste
+                            lesProfils.add(profil);
                         }
-
+                        // envoi de la collection de profils au controleur
                         controle.setLesProfils(lesProfils);
-
                     } catch (JSONException e) {
-                        Log.d("erreur", "conversion JSON impossible " + e.toString());
+                        e.printStackTrace();
                     }
-                    break;
-
-                case "Erreur !":
-                    break;
+                }else{
+                    if(message[0].equals("Erreur !")){
+                        Log.d("Erreur !","****************"+message[1]);
+                    }
+                }
             }
         }
     }
 
     /**
-     * Méthode permettant d'envoyer une requête HTTP à notre serveur de traitements
-     * @param operation
-     * @param lesDonneesJSON
+     * Envoi de données vers le serveur distant
+     * @param operation information précisant au serveur l'opération à exécuter
+     * @param lesDonneesJSON les données à traiter par le serveur
      */
-    public void envoi(String operation, JSONArray lesDonneesJSON) {
+    public void envoi(String operation, JSONArray lesDonneesJSON){
         AccesHTTP accesDonnees = new AccesHTTP();
+        // lien avec AccesHTTP pour permettre à delegate d'appeler la méthode processFinish
+        // au retour du serveur
         accesDonnees.delegate = this;
-
-            // On ajoute les paramètres à notre requête HTTP
-            accesDonnees.addParam("operation", operation);
-            accesDonnees.addParam("lesdonnees", lesDonneesJSON.toString());
-
-            accesDonnees.execute(SERVERADDR);
+        // ajout de paramètres dans l'enveloppe HTTP
+        accesDonnees.addParam("operation", operation);
+        accesDonnees.addParam("lesdonnees", lesDonneesJSON.toString());
+        // envoi en post des paramètres, à l'adresse SERVERADDR
+        accesDonnees.execute(SERVERADDR);
     }
+
 }

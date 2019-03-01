@@ -3,7 +3,6 @@ package com.example.alexy.coach.controleur;
 import android.content.Context;
 
 import com.example.alexy.coach.modele.AccesDistant;
-import com.example.alexy.coach.modele.AccessLocal;
 import com.example.alexy.coach.modele.Profil;
 import com.example.alexy.coach.outils.Serializer;
 import com.example.alexy.coach.vue.CalculActivity;
@@ -13,149 +12,174 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Created by emds on 23/02/2018.
+ */
+
 public final class Controle {
+
+    // propriétés
     private static Controle instance = null;
-    private static Profil profil = null;
-    private static ArrayList<Profil> lesProfils;
+    private static Profil profil;
     private static String nomFic = "saveprofil";
-    private static AccessLocal accesLocal;
-    private static AccesDistant accesDistant = new AccesDistant();
-    private static Context contexte;
+    //    private static AccesLocal accesLocal;
+    private static AccesDistant accesDistant;
+    private static Context context;
+    private ArrayList<Profil> lesProfils = new ArrayList<Profil>();
 
     /**
-     * Contructeur privé pour ne pas l'instancier (Pattern Singleton)
+     * Constructeur privé
      */
-    private Controle() {
+    private Controle(){
         super();
     }
 
     /**
-     * Permet de retourner l'instance du contrôleur (Pattern Singleton), l'invoque au 1er appel
-     * @return
+     * Crée ou récupère l'instance déjà créée
+     * @return l'instance de Conrtole
      */
-    public static final Controle getInstance(Context contexte) {
-        if(contexte != null) {
-            Controle.contexte = contexte;
+    public static final Controle getInstance(Context context){
+        if(context!=null) {
+            Controle.context = context;
         }
-        if(Controle.instance == null) {
+        if(Controle.instance==null){
             Controle.instance = new Controle();
-            Controle.accesLocal = new AccessLocal(contexte);
-            Controle.contexte = contexte;
-            //profil = accesLocal.recupDernier();
-            //Controle.recupSerialize(contexte);
-
+//            Controle.accesLocal = new AccesLocal(context);
             accesDistant = new AccesDistant();
+//            Controle.profil = accesLocal.recupDernier();
+//            accesDistant.envoi("dernier", new JSONArray());
             accesDistant.envoi("tous", new JSONArray());
-
+//            recupSerialize(context);
         }
         return Controle.instance;
     }
 
-    public static ArrayList<Profil> getLesProfils() {
-        return lesProfils;
-    }
-
-    public void setLesProfils(ArrayList<Profil> lesProfils) {
-        this.lesProfils = lesProfils;
-    }
-
     /**
-     * Création du profil
+     * Mémorisation du profil
      * @param poids
      * @param taille en cm
      * @param age
      * @param sexe 1 pour homme, 0 pour femme
      */
-    public void creerProfil(int poids, int taille, int age, int sexe, Context contexte) {
-        profil = new Profil(new Date(), poids, taille, age, sexe);
-        lesProfils.add(profil);
-
-        // Sauvegarde de notre profil par sérialisation
-        //Serializer.serialize(nomFic, profil, contexte);
-
-        // Ajout de notre profil dans la DB SQLite
-        //accesLocal.ajout(profil);
-        accesDistant.envoi("enreg", lesProfils.get(lesProfils.size() - 1).convertToJSONArray());
+    public void creerProfil(Integer poids, Integer taille, Integer age, Integer sexe, Context context){
+        Profil unProfil = new Profil(new Date(), poids, taille, age, sexe);
+        lesProfils.add(unProfil);
+//        accesLocal.ajout(profil);
+        accesDistant.envoi("enreg", unProfil.convertToJSONArray());
+//        Serializer.serialize(nomFic, profil, context);
     }
 
     /**
-     * Retourne la méthode getImg() l'instance de Profil
-     * @return
+     * demande de suppression d'un profil
+     * @param profil
      */
-    public float getImg() {
-        return lesProfils.get(lesProfils.size() - 1).getImg();
+    public void delProfil(Profil profil){
+        accesDistant.envoi("del", profil.convertToJSONArray());
+        lesProfils.remove(profil);
     }
 
     /**
-     * Retourne la méthode getMessage() de l'instance de Profil
-     * @return String le message
+     * getter
+     * @return lesProfils
      */
-    public String getMessage() {
-        if(profil == null) {
+    public ArrayList<Profil> getLesProfils() {
+        return lesProfils;
+    }
+
+    /**
+     * setter
+     * @param lesProfils
+     */
+    public void setLesProfils(ArrayList<Profil> lesProfils) {
+        this.lesProfils = lesProfils;
+    }
+
+    /**
+     * Récupère et retourne l'IMG du dernier profil si le profil existe
+     * @return img
+     */
+    public Float getImg(){
+        if(lesProfils.size()==0){
             return null;
-        } else {
-            return lesProfils.get(lesProfils.size() - 1).getMessage();
+        }else{
+            return lesProfils.get(lesProfils.size()-1).getImg();
         }
     }
 
     /**
-     * Méthode permettant de retourner la taille d'une personne,
+     * Récupère et retourne le message du dernier profil si le profil existe
+     * @return message
      */
-    public Integer getTaille() {
-        if(profil == null) {
+    public String getMessage(){
+        if(lesProfils.size()==0){
             return null;
-        } else {
-            return lesProfils.get(lesProfils.size() - 1).getTaille();
+        }else{
+            return lesProfils.get(lesProfils.size()-1).getMessage();
         }
     }
 
     /**
-     * Méthode permettant de retourner le poids d'une personne,
+     * Récupère et retourne le poids du profil si le profil existe
+     * @return poids
      */
-    public Integer getPoids() {
-        if(profil == null) {
+    public Integer getPoids(){
+        if(profil==null){
             return null;
-        } else {
-            return lesProfils.get(lesProfils.size() - 1).getPoids();
+        }else{
+            return profil.getPoids();
         }
     }
 
     /**
-     * Méthode permettant de retourner l'âge d'une personne,
+     * Récupère et retourne la taille du profil si le profil existe
+     * @return taille
      */
-    public Integer getAge() {
-        if(profil == null) {
+    public Integer getTaille(){
+        if(profil==null){
             return null;
-        } else{
-            return lesProfils.get(lesProfils.size() - 1).getAge();
+        }else{
+            return profil.getTaille();
         }
     }
 
     /**
-     * Méthode permettant de retourner le sexe d'une personne,
+     * Récupère et retourne l'âge du profil si le profil existe
+     * @return age
      */
-    public Integer getSexe() {
-        if(profil == null) {
+    public Integer getAge(){
+        if(profil==null){
             return null;
-        } else {
-            return lesProfils.get(lesProfils.size() - 1).getSexe();
+        }else{
+            return profil.getAge();
         }
     }
 
     /**
-     * Méthode qui récupère les données sérializées précédemment saisies
-     * @param contexte
+     * Récupère et retourne le sexe du profil si le profil existe
+     * @return sexe
      */
-    private static void recupSerialize(Context contexte) {
-        Controle.profil = (Profil) Serializer.deSerialize(nomFic, contexte);
+    public Integer getSexe(){
+        if(profil==null){
+            return null;
+        }else{
+            return profil.getSexe();
+        }
     }
 
     /**
-     * Setter profil
-     * @param profil le Profil à définir
+     * Valorise le profil
+     * @param profil
      */
-    public void setProfil(Profil profil) {
+    public void setProfil(Profil profil){
         Controle.profil = profil;
-        ((CalculActivity)contexte).recupProfil();
+//        ((CalculActivity)context).recupProfil();
+    }
+
+    /**
+     * Valorise le profil avec l'objet précédemment sérialisé
+     * @param context
+     */
+    private static void recupSerialize(Context context){
+        profil = (Profil)Serializer.deSerialize(nomFic, context);
     }
 }

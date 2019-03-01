@@ -1,7 +1,6 @@
 package com.example.alexy.coach.vue;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,63 +9,70 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.alexy.coach.R;
+import com.example.alexy.coach.controleur.Controle;
 import com.example.alexy.coach.modele.Profil;
 import com.example.alexy.coach.outils.MesOutils;
 
 import java.util.ArrayList;
 
+/**
+ * Created by emds on 28/02/2018.
+ */
+
 public class HistoListAdapter extends BaseAdapter {
 
-    ArrayList <Profil> lesProfils;
-    LayoutInflater inflater;
-    Context context;
+    // propriétés
+    private ArrayList<Profil> lesProfils;
+    private LayoutInflater inflater;
+    private Context context;
 
-    public HistoListAdapter(Context context, ArrayList <Profil> profils) {
-        this.lesProfils = profils;
+    /**
+     * Constructeur
+     * @param context
+     * @param lesProfils
+     */
+    public HistoListAdapter(Context context, ArrayList<Profil> lesProfils){
+        this.lesProfils = lesProfils;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
     }
 
-    @Override
-    public boolean areAllItemsEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled(int i) {
-        return false;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-
-    }
-
+    /**
+     * Nombre de lignes de lal iste
+     * @return nombre de lignes
+     */
     @Override
     public int getCount() {
         return lesProfils.size();
     }
 
+    /**
+     * Item correspondant à un id
+     * @param i id
+     * @return item correspondant à l'id
+     */
     @Override
     public Object getItem(int i) {
-        return null;
+        return lesProfils.get(i);
     }
 
+    /**
+     * id correspondant à un id
+     * @param i id
+     * @return un id
+     */
     @Override
     public long getItemId(int i) {
         return i;
     }
 
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
+    /**
+     * Construction d'une vue complète de la ligne correspondant à un id
+     * @param i id
+     * @param view vue
+     * @param viewGroup
+     * @return vue construite
+     */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         // holder est un objet de la petite classe
@@ -96,31 +102,47 @@ public class HistoListAdapter extends BaseAdapter {
         holder.imgListSuppr.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                // code a exécuter sur le clic d'un bouton suppr
+                // code a exécuter
+                int position = (int) v.getTag();
+                Controle controle = Controle.getInstance(null);
+                controle.delProfil(lesProfils.get(position));
+                // rafraichi la liste visuelle
+                notifyDataSetChanged() ;
+            }
+        }) ;
+        // mémorisation de l'indice de ligne en étiquette de txtListDate pour ensuite récupérer cet indice dans l'événement
+        holder.txtListDate.setTag(i) ;
+        // gestion de l'événement clic sur la zone de texte
+        holder.txtListDate.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // code a exécuter
+                int position = (int) v.getTag();
+                ((HistoActivity)context).afficheProfil(lesProfils.get(position));
+            }
+        }) ;
+        // mémorisation de l'indice de ligne en étiquette de txtListIMG pour ensuite récupérer cet indice dans l'événement
+        holder.txtListIMG.setTag(i) ;
+        // gestion de l'événement clic sur la zone de texte
+        holder.txtListDate.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // code a exécuter
+                int position = (int) v.getTag();
+                ((HistoActivity)context).afficheProfil(lesProfils.get(position));
             }
         }) ;
         // retour de la vue construite
         return view ;
     }
 
-    @Override
-    public int getItemViewType(int i) {
-        return 0;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    private class ViewHolder {
+    /**
+     * Classe des 3 objets graphiques de la ligne
+     */
+    private class ViewHolder{
+        ImageButton imgListSuppr;
         TextView txtListDate;
         TextView txtListIMG;
-        ImageButton imgListSuppr;
     }
+
 }
